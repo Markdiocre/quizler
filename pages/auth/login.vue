@@ -1,11 +1,11 @@
 <script setup lang="ts">
 definePageMeta({
-    layout: 'auth'
-})
+    layout: 'auth',
 
+})
 const router = useRouter()
 
-const email = ref('')
+const username = ref('')
 const password = ref('')
 
 function navigateToRegister() {
@@ -13,17 +13,20 @@ function navigateToRegister() {
 }
 
 async function login() {
-    try {
-        const res = await $fetch('/api/auth/login', {
-            method: 'post',
-            body: {
-                "email": email.value,
-                "password": password.value
-            }
-        })
-    }catch(err){
-        alert(err.data.message)
-    }
+    const res = await $fetch('/api/auth/login', {
+        method: 'post',
+        body: {
+            "username": username.value,
+            "password": password.value
+        }
+    }).then((res) => {
+        console.log(res)
+    }).catch((err) => {
+        console.log(err.data.message)
+    })
+
+        //TODO: Handle errors and use toasts
+
 }
 </script>
 
@@ -34,20 +37,23 @@ async function login() {
         </div>
         <div class="md:w-1/2 w-full p-8">
             <h1 class="text-2xl font-bold">Login</h1>
-            <p class="text-gray-400 mt-2">Welcome back! Please log in so you can continue using our app.</p>
-            <label class="block mt-4">
-                <span class="block text-sm font-medium text-slate-700">Email</span>
-                <input v-model="email" type="email"
-                    class="border-2 border-gray-400 hover:border-primary focus:border-primary invalid:border-pink-500 focus:outline-none p-2 w-full rounded">
-            </label>
-            <label class="block mt-4">
-                <span class="block text-sm font-medium text-slate-700">Password</span>
-                <input v-model="password" type="password"
-                    class="border-2 border-gray-400 hover:border-primary focus:border-primary invalid:border-pink-500 focus:outline-none p-2 w-full rounded">
-            </label>
+            <form @submit.prevent="login">
+                <label class="block mt-4">
+                    <span class="block text-sm font-medium text-slate-700">Username</span>
+                    <input v-model="username" type="text"
+                        class="border-2 border-gray-400 hover:border-primary focus:border-primary focus:outline-none p-2 w-full rounded"
+                        required>
+                </label>
+                <label class="block mt-4">
+                    <span class="block text-sm font-medium text-slate-700">Password</span>
+                    <input v-model="password" type="password"
+                        class="border-2 border-gray-400 hover:border-primary focus:border-primary focus:outline-none p-2 w-full rounded"
+                        required>
+                </label>
 
-            <button class="bg-primary hover:bg-primaryHover rounded w-full p-2 text-white mt-8"
-                @click="login(email, password)">Login</button>
+                <button class="bg-primary hover:bg-primaryHover rounded w-full p-2 text-white mt-8"
+                    type="submit">Login</button>
+            </form>
 
             <p class="text-gray-400 mt-8">New User? <span class="text-primary cursor-pointer"
                     @click="navigateToRegister">Sign Up</span></p>

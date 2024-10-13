@@ -11,5 +11,7 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ['@prisma/nuxt'],
+  runtimeConfig:{
+    API_SECRET: 'rKN6VyShKADI8L7SaWYNjP3b8OrcqTLB'
+  }
 })
