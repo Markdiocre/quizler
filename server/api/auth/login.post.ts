@@ -4,24 +4,24 @@ import { z } from "zod"
 const prisma = new PrismaClient()
 
 const schema = z.object({
-    username: z.string({
-        required_error: "Username must be provided"
-    }),
+    email: z.string({
+        required_error: "Email must be provided"
+    }).email(),
     password: z.string(
         {
-            required_error: "Username must be provided"
+            required_error: "Passowrd must be provided"
         }
     )
 })
 
 export default defineEventHandler(async (event) => {
     try {
-        const { username, password } : ILogin = await readBody(event)
+        const { email, password } : ILogin = await readBody(event)
 
-        if(username == "" || password =="") return responseUtil(event,"Username and password cannot be empty.", null, 400)
+        if(email == "" || password =="") return responseUtil(event,"Username and password cannot be empty.", null, 400)
         
-        const validatedCreds = schema.parse({
-            username: username,
+        const validatedCreds : ILogin = schema.parse({
+            email: email,
             password: password
         })
 
@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
 
         const getUser = await prisma.user.findUnique({
             where: {
-                username: validatedCreds.username
+                email: validatedCreds.email
             }
         })
 

@@ -1,12 +1,10 @@
 declare interface ILogin{
-    username : string,
+    email : string,
     password: string
 }
 
 declare interface IRegister {
     email: string
-    first_name: string | undefined
-    last_name: string | undefined
-    username: string
-    password: string
+    password: string,
+    confirm_password : string
 }

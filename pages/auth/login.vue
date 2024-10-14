@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import requestHandler from '~/utils/requestHandler';
+
 definePageMeta({
     layout: 'auth',
 
@@ -13,16 +15,13 @@ function navigateToRegister() {
 }
 
 async function login() {
-    const res = await $fetch('/api/auth/login', {
-        method: 'post',
+    const res = await requestHandler({
+        url: '/api/auth/login',
+        method: 'POST',
         body: {
             "username": username.value,
             "password": password.value
         }
-    }).then((res) => {
-        console.log(res)
-    }).catch((err) => {
-        console.log(err.data.message)
     })
 
         //TODO: Handle errors and use toasts
