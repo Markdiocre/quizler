@@ -17,12 +17,16 @@ function navigateToLogin(){
 async function register(){
     const res = await requestHandler({
         url: '/api/auth/register',
-        method: 'POST',
+        method: 'post',
         body:{
             email: email.value,
             password: password.value,
             confirm_password : confirm_password.value
         }
+    }).then((res)=>{
+        console.log(res)
+    }).catch((err)=>{
+        console.log(err)
     })
 
 }

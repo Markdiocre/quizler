@@ -17,7 +17,7 @@ function navigateToRegister() {
 async function login() {
     const res = await requestHandler({
         url: '/api/auth/login',
-        method: 'POST',
+        method: 'post',
         body: {
             "username": username.value,
             "password": password.value
