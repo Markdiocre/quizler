@@ -23,10 +23,17 @@ async function register(){
             password: password.value,
             confirm_password : confirm_password.value
         }
-    }).then((res)=>{
-        console.log(res)
+    }).then((res: any)=>{
+        showToast({
+            message: res.message,
+            type:'success'
+        })
+        navigateToLogin()
     }).catch((err)=>{
-        console.log(err)
+        showToast({
+            message: err.message,
+            type: 'error'
+        })
     })
 
 }

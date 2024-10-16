@@ -8,7 +8,7 @@ const schema = z.object({
     email: z.string().email({
         message: "Please enter a valid email."
     }),
-    password: z.string().min(10, {
+    password: z.string().min(8, {
         message: "Password must be atleast 8 characters long"
     }),
     confirm_password: z.string()
