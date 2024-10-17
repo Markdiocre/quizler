@@ -24,7 +24,7 @@ async function login() {
         }
     })
 
-        //TODO: Handle errors and use toasts
+    
 
 }
 </script>

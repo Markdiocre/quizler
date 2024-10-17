@@ -12,6 +12,6 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig:{
-    API_SECRET: 'rKN6VyShKADI8L7SaWYNjP3b8OrcqTLB'
+    API_SECRET: process.env.API_SECRET
   }
 })

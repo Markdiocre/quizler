@@ -1,5 +1,7 @@
 import { PrismaClient } from "@prisma/client"
 import { z } from "zod"
+import jwt from 'jsonwebtoken'
+import bcrypt from 'bcrypt'
 
 const prisma = new PrismaClient()
 
@@ -16,17 +18,18 @@ const schema = z.object({
 
 export default defineEventHandler(async (event) => {
     try {
-        const { email, password } : ILogin = await readBody(event)
+        const config = useRuntimeConfig(event)
+        const { email, password }: ILogin = await readBody(event)
 
-        if(email == "" || password =="") return responseUtil(event,"Username and password cannot be empty.", null, 400)
-        
-        const validatedCreds : ILogin = schema.parse({
+        if (email == "" || password == "") return responseUtil(event, "Username and password cannot be empty.", null, 400)
+
+        const validatedCreds: ILogin = schema.parse({
             email: email,
             password: password
         })
 
-        if(!validatedCreds) return responseUtil(event, "Error in Request", null, 500)
-        
+        if (!validatedCreds) return responseUtil(event, "Error in Request", null, 500)
+
 
         const getUser = await prisma.user.findUnique({
             where: {
@@ -35,9 +38,22 @@ export default defineEventHandler(async (event) => {
         })
 
         if (!getUser) return responseUtil(event, "User does not exist. Have you registered?", null, 400)
-        
 
-        return responseUtil(event, "Yo shit", null,200)
+        const isPasswordMatch = await bcrypt.compare(validatedCreds.password, getUser.password)
+
+        if (!isPasswordMatch) return responseUtil(event, "Username or password may be wrong", null, 400)
+
+        setCookie(event, 'auth', jwt.sign({
+            id: getUser.id,
+            is_superuser: getUser.is_superuser
+        }, config.API_SECRET, {
+            expiresIn: '1 day'
+        }), {
+            httpOnly: true,
+            maxAge: 86400
+        })
+
+        return responseUtil(event, "Successfully logged in!", null, 200)
     } catch (e) {
         return returnResponseError(event, e)
     }
