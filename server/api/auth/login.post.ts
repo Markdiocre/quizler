@@ -6,7 +6,7 @@ import bcrypt from 'bcrypt'
 const prisma = new PrismaClient()
 
 const schema = z.object({
-    email: z.string({
+    email : z.string({
         required_error: "Email must be provided"
     }).email(),
     password: z.string(
@@ -29,7 +29,6 @@ export default defineEventHandler(async (event) => {
         })
 
         if (!validatedCreds) return responseUtil(event, "Error in Request", null, 500)
-
 
         const getUser = await prisma.user.findUnique({
             where: {
@@ -55,6 +54,7 @@ export default defineEventHandler(async (event) => {
 
         return responseUtil(event, "Successfully logged in!", null, 200)
     } catch (e) {
+        console.log(e)
         return returnResponseError(event, e)
     }
 

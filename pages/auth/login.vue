@@ -3,11 +3,11 @@ import requestHandler from '~/utils/requestHandler';
 
 definePageMeta({
     layout: 'auth',
-
+    middleware: ['is-authenticated']
 })
 const router = useRouter()
 
-const username = ref('')
+const email = ref('')
 const password = ref('')
 
 function navigateToRegister() {
@@ -19,9 +19,21 @@ async function login() {
         url: '/api/auth/login',
         method: 'post',
         body: {
-            "username": username.value,
-            "password": password.value
+            email: email.value,
+            password: password.value
         }
+    }).then((res: any)=>{
+        showToast({
+            message: res.message,
+            type: 'success'
+        })
+
+        router.push({path: '/dashboard/'})
+    }).catch((err)=>{
+        showToast({
+            message: err.message,
+            type: 'error'
+        })
     })
 
     
@@ -38,8 +50,8 @@ async function login() {
             <h1 class="text-2xl font-bold">Login</h1>
             <form @submit.prevent="login">
                 <label class="block mt-4">
-                    <span class="block text-sm font-medium text-slate-700">Username</span>
-                    <input v-model="username" type="text"
+                    <span class="block text-sm font-medium text-slate-700">Email</span>
+                    <input v-model="email" type="email"
                         class="border-2 border-gray-400 hover:border-primary focus:border-primary focus:outline-none p-2 w-full rounded"
                         required>
                 </label>

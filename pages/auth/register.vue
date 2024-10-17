@@ -2,7 +2,8 @@
 import requestHandler from '~/utils/requestHandler';
 
 definePageMeta({
-    layout: 'auth'
+    layout: 'auth',
+    middleware: ['is-authenticated']
 })
 
 const router = useRouter()
